@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        {% if page == "movies" %}
+            Movies List
+        {% elif page == "add_movie" %}
+            Add Movie
+        {% elif page == "movie_details" %}
+            {{ movie['title'] }} - Details
+        {% elif page == "add_rating" %}
+            Add Rating
+        {% elif page == "update_movie" %}
+            Update Movie
+        {% else %}
+            Movie App
+        {% endif %}
+    </title>
+</head>
+<body>
+    {% if page == "movies" %}
+        <h1>Movies List</h1>
+        <a href="/movies/add">Add New Movie</a>
+        <ul>
+            {% for movie in movies %}
+                <li>
+                    <a href="/movies/{{ movie['id'] }}">{{ movie['title'] }}</a>
+                    ({{ movie['genre'] }})
+                    <a href="/movies/{{ movie['id'] }}/update">Update</a>
+                    <a href="/movies/{{ movie['id'] }}/delete" onclick="return confirm('Are you sure you want to delete this movie?')">Delete</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% elif page == "add_movie" %}
+        <h1>Add a New Movie</h1>
+        <form method="POST">
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="title" required>
+            <br>
+            <label for="genre">Genre:</label>
+            <input type="text" id="genre" name="genre" required>
+            <br>
+            <button type="submit">Add Movie</button>
+        </form>
+        <a href="/movies">Back to Movies List</a>
+    {% elif page == "movie_details" %}
+        <h1>{{ movie['title'] }}</h1>
+        <p><strong>Genre:</strong> {{ movie['genre'] }}</p>
+        <h2>Ratings</h2>
+        <ul>
+            {% for rating in ratings %}
+                <li>{{ rating['rating'] }}</li>
+            {% endfor %}
+        </ul>
+        <a href="/movies/{{ movie['id'] }}/add_rating">Add Rating</a>
+        <br>
+        <a href="/movies">Back to Movies List</a>
+    {% elif page == "add_rating" %}
+        <h1>Add Rating for Movie ID {{ movie_id }}</h1>
+        <form method="POST">
+            <label for="rating">Rating (1-10):</label>
+            <input type="number" id="rating" name="rating" min="1" max="10" required>
+            <br>
+            <button type="submit">Submit Rating</button>
+        </form>
+        <a href="/movies/{{ movie_id }}">Back to Movie Details</a>
+    {% elif page == "update_movie" %}
+        <h1>Update Movie - {{ movie['title'] }}</h1>
+        <form method="POST">
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="title" value="{{ movie['title'] }}" required>
+            <br>
+            <label for="genre">Genre:</label>
+            <input type="text" id="genre" name="genre" value="{{ movie['genre'] }}" required>
+            <br>
+            <button type="submit">Update Movie</button>
+        </form>
+        <a href="/movies">Back to Movies List</a>
+    {% endif %}
+</body>
+</html>
