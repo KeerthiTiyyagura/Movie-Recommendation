@@ -14,7 +14,7 @@ def index():
 @app.route("/movies")
 def get_movies():
     movies = database.get_all_movies()
-    return render_template("movies.html", movies=movies)
+    return render_template("template.html", page="movies", movies=movies)
 
 @app.route("/movies/add", methods=["GET", "POST"])
 def add_movie():
@@ -23,13 +23,13 @@ def add_movie():
         genre = request.form["genre"]
         database.add_movie(title, genre)
         return redirect(url_for("get_movies"))
-    return render_template("add_movie.html")
+    return render_template("template.html", page="add_movie")
 
 @app.route("/movies/<int:movie_id>")
 def movie_details(movie_id):
     movie = database.get_movie_details(movie_id)
     ratings = database.get_ratings_for_movie(movie_id)
-    return render_template("movie_details.html", movie=movie, ratings=ratings)
+    return render_template("template.html", page="movie_details", movie=movie, ratings=ratings)
 
 @app.route("/movies/<int:movie_id>/add_rating", methods=["GET", "POST"])
 def add_rating(movie_id):
@@ -37,7 +37,7 @@ def add_rating(movie_id):
         rating_value = int(request.form["rating"])
         database.add_rating(movie_id, rating_value)
         return redirect(url_for("movie_details", movie_id=movie_id))
-    return render_template("add_rating.html", movie_id=movie_id)
+    return render_template("template.html", page="add_rating", movie_id=movie_id)
 
 @app.route("/movies/<int:movie_id>/update", methods=["GET", "POST"])
 def update_movie(movie_id):
@@ -47,7 +47,7 @@ def update_movie(movie_id):
         database.update_movie(movie_id, title, genre)
         return redirect(url_for("get_movies"))
     movie = database.get_movie_details(movie_id)
-    return render_template("update_movie.html", movie=movie)
+    return render_template("template.html", page="update_movie", movie=movie)
 
 @app.route("/movies/<int:movie_id>/delete")
 def delete_movie(movie_id):
